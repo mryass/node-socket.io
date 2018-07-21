@@ -1,4 +1,26 @@
-'use strict';
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+app.get('/', function(req, res){
+  res.sendFile(__dirname + '/index.html');
+});
+
+io.on('connection', function(socket){
+  console.log('user connected');
+  socket.on('disconnect', function(){
+    console.log('user DISconnected');
+  });
+  socket.on('chat message', function(msg){
+    console.log('message: ' + msg);
+  });
+});
+
+http.listen(8080, function(){
+  console.log('listening for http on *:8080');
+});
+
+/* 'use strict';
 
 const express = require('express');
 const socketIO = require('socket.io');
@@ -18,4 +40,7 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => console.log('Client disconnected'));
 });
 
+//io.on('')
+
 setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
+ */
